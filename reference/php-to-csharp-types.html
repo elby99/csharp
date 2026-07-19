@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PHP → C#: Type-system field guide</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main><p class="eyebrow">Quick reference · Brownfield baseline</p><h1>PHP → C#: types change what code means</h1>
+<p class="lede">C# types participate in compilation, overload selection, permitted operations, representation, and dispatch. They are not merely annotations on PHP-like values.</p>
+<h2 id="compile-time-type">Compile-time type versus run-time type</h2>
+<pre><code>object value = "invoice"; // compile-time: object; run-time: string
+Console.WriteLine(value.ToString());</code></pre>
+<p>The declared type controls which members and implicit conversions are available and participates in overload resolution. The object’s run-time type controls virtual dispatch and run-time type tests.</p>
+<h2>Fast comparison</h2><div class="comparison"><section><h3>PHP instinct</h3><p>A variable can hold values of unrelated types over its lifetime. Type declarations mainly constrain boundaries and assignments at run time.</p></section><section><h3>C# model</h3><p>Every expression has a compile-time type. A variable’s declared or inferred type does not change after declaration.</p></section></div>
+<h2>Three distinctions to inspect</h2><ul><li><strong>Value/reference:</strong> assignment may copy a value or copy a reference.</li><li><strong>Static/run-time:</strong> the same object can be viewed through different compile-time types.</li><li><strong>Implicit/explicit conversion:</strong> a cast requests a defined conversion; it does not generally coerce arbitrary data.</li></ul>
+<div class="callout"><strong>Version note:</strong> These fundamentals are brownfield baseline. Newer syntax can express types differently without removing these semantics.</div>
+<footer>Primary sources: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/">The C# type system</a> and <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/">C# language specification</a>.</footer>
+</main></body></html>

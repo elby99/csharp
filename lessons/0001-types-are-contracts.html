@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson 1: Types are contracts</title><link rel="stylesheet" href="../assets/course.css"><script src="../assets/quiz.js" defer></script></head>
+<body><main><p class="eyebrow">Lesson 0001 · Brownfield baseline · 8 minutes</p><h1>Types are contracts, not labels</h1>
+<p class="lede">Your win: predict which method an ordinary-looking call reaches before you trace into a large MVC 5 service layer.</p>
+<div class="callout"><strong>Mission link:</strong> In brownfield C#, the type visible at the call site can matter as much as the object created at run time. Reading that distinction correctly prevents false control-flow assumptions.</div>
+<h2>The model</h2><p>Every C# expression has a compile-time type. That type controls which members are available, which conversions are permitted, and which overload is selected. An object can also have a more specific run-time type, which matters for virtual dispatch and type tests.</p>
+<div class="comparison"><section><h3>PHP instinct</h3><pre><code>function describe($value) { /* inspect at runtime */ }
+describe("paid");</code></pre><p>The value arriving at run time dominates your mental model.</p></section><section><h3>C# adjustment</h3><pre><code>void Describe(object value) { }
+void Describe(string value) { }
+object status = "paid";
+Describe(status);</code></pre><p>The call selects <code>Describe(object)</code> because <code>status</code> has compile-time type <code>object</code>.</p></section></div>
+<h2>Why this surprises people</h2><p>Overload resolution occurs at compile time. It differs from overriding: an overridden virtual method is selected using the run-time object. Mature C# code often contains both mechanisms, so the first reading move is to identify the compile-time type at each call site.</p>
+<section class="quiz" data-answer="object" data-correct="Correct. The variable’s compile-time type selects the object overload." data-incorrect="Not quite. Ignore the run-time string briefly and inspect the variable declaration."><h2>Predict before clicking</h2><pre><code>static string Render(object value) =&gt; "object";
+static string Render(string value) =&gt; "string";
+
+object invoiceId = "INV-42";
+Console.WriteLine(Render(invoiceId));</code></pre><p>What is printed?</p><button type="button" data-choice="string">string</button><button type="button" data-choice="object">object</button><p class="feedback" aria-live="polite"></p></section>
+<h2>Brownfield reading move</h2><ol><li>Find the variable, parameter, or property declaration.</li><li>Record its compile-time type.</li><li>List candidate overloads from that type context.</li><li>Only then consider virtual dispatch on the run-time object.</li></ol>
+<div class="callout"><strong>Retrieve it:</strong> Without looking back, explain in one sentence why changing <code>object invoiceId</code> to <code>var invoiceId</code> changes this call. Send your sentence to your teacher for feedback; a learning record is created only after your explanation demonstrates the distinction.</div>
+<p>Keep nearby: <a href="../reference/php-to-csharp-types.html#compile-time-type">PHP → C# type-system field guide</a>.</p>
+<footer>Primary reading: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/">The C# type system — Microsoft Learn</a>. Ask your teacher about anything that remains unclear or about a similar pattern from the production codebase.</footer>
+</main></body></html>
